@@ -20,10 +20,10 @@ public:
   void setMaxRetries(uint8_t retries);
   uint32_t getFailedCount() const;
   void resetFailedCount();
-  void Send();
+  void send();
 
-  bool isQueueFull() const;
-  bool isQueueEmpty() const;
+  bool isFull() const;
+  bool isEmpty() const;
   int howManyInQueue() const;
 
 private:
@@ -36,8 +36,6 @@ private:
   uint8_t maxRetries;
   SendFunction sendFunction;
 
-  bool isFull() const;
-  bool isEmpty() const;
   bool sendCANMessage(const CANMessage& msg);
 };
 
