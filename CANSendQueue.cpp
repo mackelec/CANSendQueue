@@ -16,7 +16,6 @@ CANSendQueue::~CANSendQueue() {
 
 bool CANSendQueue::enqueue(const CANMessage& msg) {
     if (isFull()) {
-        // If the queue is full, move the front pointer to discard the oldest message
         front = (front + 1) % queueSize;
     }
     queue[rear] = msg;
@@ -37,7 +36,7 @@ void CANSendQueue::resetFailedCount() {
     failedCount = 0;
 }
 
-void CANSendQueue::Send() {
+void CANSendQueue::send() {
     if(isEmpty()) return;
 
     if (sendCANMessage(queue[front])) {
@@ -57,6 +56,14 @@ bool CANSendQueue::isFull() const {
 
 bool CANSendQueue::isEmpty() const {
     return rear == front;
+}
+
+int CANSendQueue::howManyInQueue() const {
+    if (rear >= front) {
+        return rear - front;
+    } else {
+        return queueSize - front + rear;
+    }
 }
 
 bool CANSendQueue::sendCANMessage(const CANMessage& msg) {
