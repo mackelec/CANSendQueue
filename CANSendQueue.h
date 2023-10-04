@@ -11,7 +11,6 @@ struct CANMessage {
 
 class CANSendQueue {
 public:
-  // Define the function signature for the sendQCANMessage function
   typedef bool (*SendFunction)(uint16_t id, uint8_t* array, uint8_t length);
 
   CANSendQueue(SendFunction sendFunc, int customQueueSize = defaultQueueSize);
@@ -23,6 +22,10 @@ public:
   void resetFailedCount();
   void Send();
 
+  bool isQueueFull() const;
+  bool isQueueEmpty() const;
+  int howManyInQueue() const;
+
 private:
   static const int defaultQueueSize = 10;
   int queueSize;
@@ -31,7 +34,7 @@ private:
   int front, rear;
   uint32_t failedCount;
   uint8_t maxRetries;
-  SendFunction sendFunction; // Store the function pointer
+  SendFunction sendFunction;
 
   bool isFull() const;
   bool isEmpty() const;
