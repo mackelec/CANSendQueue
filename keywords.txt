@@ -1,0 +1,7 @@
+CANSendQueue	KEYWORD1
+enqueue	KEYWORD2
+setMaxRetries	KEYWORD2
+getFailedCount	KEYWORD2
+resetFailedCount	KEYWORD2
+Send	KEYWORD2
+CANMessage	KEYWORD1
