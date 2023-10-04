@@ -1,15 +1,28 @@
 #include "CANSendQueue.h"
 
-CANSendQueue::CANSendQueue() : front(0), rear(0), failedCount(0), maxRetries(3) {}
+CANSendQueue::CANSendQueue(SendFunction sendFunc, int customQueueSize) 
+  : front(0), rear(0), failedCount(0), maxRetries(3), sendFunction(sendFunc), queueSize(customQueueSize) {
+    queue = new CANMessage[queueSize];
+    retryCount = new uint8_t[queueSize];
+    for (int i = 0; i < queueSize; i++) {
+        retryCount[i] = 0;
+    }
+}
+
+CANSendQueue::~CANSendQueue() {
+    delete[] queue;
+    delete[] retryCount;
+}
 
 bool CANSendQueue::enqueue(const CANMessage& msg) {
-    if (!isFull()) {
-        queue[rear] = msg;
-        retryCount[rear] = 0;
-        rear = (rear + 1) % queueSize;
-        return true;
+    if (isFull()) {
+        // If the queue is full, move the front pointer to discard the oldest message
+        front = (front + 1) % queueSize;
     }
-    return false; // Queue is full
+    queue[rear] = msg;
+    retryCount[rear] = 0;
+    rear = (rear + 1) % queueSize;
+    return true;
 }
 
 void CANSendQueue::setMaxRetries(uint8_t retries) {
@@ -28,12 +41,12 @@ void CANSendQueue::Send() {
     if(isEmpty()) return;
 
     if (sendCANMessage(queue[front])) {
-        front = (front + 1) % queueSize; // Move to next message if successfully sent
+        front = (front + 1) % queueSize;
     } else {
         retryCount[front]++;
         if(retryCount[front] >= maxRetries) {
             failedCount++;
-            front = (front + 1) % queueSize; // Move to the next message after reaching max retries
+            front = (front + 1) % queueSize;
         }
     }
 }
@@ -47,17 +60,5 @@ bool CANSendQueue::isEmpty() const {
 }
 
 bool CANSendQueue::sendCANMessage(const CANMessage& msg) {
-    // Replace with your actual implementation of sending CAN messages
-    Serial.println("Sending CAN message:");
-    Serial.print("Address: ");
-    Serial.println(msg.address, HEX);
-    Serial.print("Data: ");
-    for (uint8_t i = 0; i < msg.length; i++) {
-        Serial.print(msg.data[i], HEX);
-        Serial.print(" ");
-    }
-    Serial.println();
-
-    // Return true if sending was successful, false otherwise
-    return true; // Replace with actual condition
+    return sendFunction(msg.address, msg.data, msg.length);
 }
