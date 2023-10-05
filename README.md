@@ -33,6 +33,7 @@ void setup() {
 void loop() {
     // Your loop code, use canQueue.enqueue(), canQueue.send(), etc.
 }
+
 ```
 
 ### Providing a CAN Send Function:
