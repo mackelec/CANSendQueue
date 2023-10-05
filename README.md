@@ -33,23 +33,52 @@ void setup() {
 void loop() {
     // Your loop code, use canQueue.enqueue(), canQueue.send(), etc.
 }
-
+```
 
 ### Providing a CAN Send Function:
 
 For the library to work, you must provide a function that implements the actual CAN message sending mechanism. The function should have the following signature:
 
-placeholder_Function_Signature
+```
+bool yourSendFunction(uint16_t id, uint8_t* data, uint8_t length);
+```
 
 **Note**: This function should return `true` when the CAN message is sent successfully, and `false` otherwise.
 
 ### Implementing the Library:
 
-placeholder_Library_Implementation
+
+```
+#include <CANSendQueue.h>
+
+bool yourSendFunction(uint16_t id, uint8_t* array, uint8_t length) {
+    // Implement your CAN sending logic here
+    // Return true on success, false on failure
+}
+
+CANSendQueue canQueue(yourSendFunction);  // Uses the default queue size
+
+void setup() {
+    // Your setup code
+}
+
+void loop() {
+    // Your loop code, use canQueue.enqueue(), canQueue.send(), etc.
+}
+```
+
 
 ## Methods Overview
 
-placeholder_Methods_Overview
+- `bool enqueue(const CANMessage& msg)`: Adds a CAN message to the queue. If the queue is full, it overwrites the oldest message. Returns `true` on successful enqueue.
+- `void setMaxRetries(uint8_t retries)`: Configures the maximum number of retry attempts for failed message transmissions.
+- `uint32_t getFailedCount() const`: Retrieves the number of failed message transmissions.
+- `void resetFailedCount()`: Resets the count of failed message transmissions to zero.
+- `void send()`: Initiates the sending process for the message at the front of the queue. This method is non-blocking.
+- `bool isFull() const`: Checks if the queue is full. Returns `true` if full, otherwise `false`.
+- `bool isEmpty() const`: Checks if the queue is empty. Returns `true` if empty, otherwise `false`.
+- `int howManyInQueue() const`: Provides the number of messages currently in the queue.
+
 
 ## Contributing
 
