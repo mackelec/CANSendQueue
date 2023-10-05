@@ -6,7 +6,13 @@ The library further supports configurable retries, overwrites the oldest message
 
 ## Features
 
-placeholder_Features_List
+- **Non-blocking Operation**: The library efficiently handles your CAN messages without blocking your main application.
+- **Configurable Retries**: You can set the number of times the library should attempt to resend a failed message.
+- **Overwriting Capability**: If the queue is full and a new message needs to be added, the oldest message will be overwritten, ensuring that the newest data is always prioritized.
+- **Transmission Failure Tracking**: Keep tabs on the number of failed transmissions, giving you insight into potential communication issues.
+- **Configurable Queue Size**: The queue size defaults to 10 but can be customized during instantiation of the `CANSendQueue` object.
+- **Versatility**: Adapt to various CAN hardware or libraries by providing your own sending function.
+
 
 ## Usage
 
