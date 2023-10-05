@@ -16,7 +16,24 @@ The library further supports configurable retries, overwrites the oldest message
 
 ## Usage
 
-placeholder_Usage_Code
+```
+#include <CANSendQueue.h>
+
+bool yourSendFunction(uint16_t id, uint8_t* array, uint8_t length) {
+    // Implement your CAN sending logic here
+    // Return true on success, false on failure
+}
+
+CANSendQueue canQueue(yourSendFunction, 15);  // 15 is the custom queue size
+
+void setup() {
+    // Your setup code
+}
+
+void loop() {
+    // Your loop code, use canQueue.enqueue(), canQueue.send(), etc.
+}
+
 
 ### Providing a CAN Send Function:
 
